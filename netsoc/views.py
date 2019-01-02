@@ -13,6 +13,7 @@ from .create_record import record_store
 class new_user(object):
 
     def create_user(request):
+        '''View to display the registration form '''
         if request.method== 'POST':
             form=forms.UserForm(request.POST)
             if form.is_valid():
@@ -37,13 +38,13 @@ class new_user(object):
             return render(request,'netsoc/new_user.html',{'form':form})
 
     def user_created(request):
-
+        '''To show the success message after registering a the user'''
         return render(request,'netsoc/user_created.html',{})
 
 class news_feed(object):
 
     def home(request):
-
+        '''View to display the home page'''
         try:
             list=models.user_profile.objects.get(user=request.user).following.all()
             queryset=list | User.objects.filter(pk=request.user.pk)
@@ -57,6 +58,7 @@ class news_feed(object):
         return render(request,'netsoc/home.html',{'post':posts,'comments':comments,'form':form})
 
     def new_post(request):
+        '''view to display form for new post'''
         if request.method=='POST':
             form=forms.PostForm(request.POST)
             if form.is_valid():
@@ -72,14 +74,14 @@ class news_feed(object):
             return render(request,'netsoc/new_post.html',{'form':form})
 
     def user_list(request):
-
+        '''To display list of all users'''
         list=User.objects.all()
         prof_list=models.user_profile.objects.all()
 
         return render(request,'netsoc/user_list.html',{'list':list,'profiles':prof_list})
 
 class datahandle(object):
-
+    '''views to perform certain tasks like adding a comment , deleteing a comment/post,editing a post ,etc'''
     def save_comment(request,id):
 
         if request.method=='POST':
@@ -232,14 +234,14 @@ class datahandle(object):
 class profile(object):
 
     def profile_page(request,id):
-
+        '''view to display the profile page of a user'''
         user=User.objects.get(pk=id)
         prof=models.user_profile.objects.get(user=user)
 
         return render(request,'netsoc/profile_page.html',{'user':user,'prof':prof})
 
     def following(request,id):
-
+        '''To display the list of the users which are followed by the given user'''
         user=request.user
         user_prof=models.user_profile.objects.get(user=user)
         following=user_prof.following.all()
@@ -247,7 +249,7 @@ class profile(object):
         return render(request,'netsoc/following.html',{'user':user,'following':following})
 
     def followers(request,id):
-
+        '''to display the list of users who are following the given user'''
         user=request.user
         user_prof=models.user_profile.objects.get(user=user)
         followers=user_prof.followers.all()
@@ -255,7 +257,7 @@ class profile(object):
         return render(request,'netsoc/followers.html',{'user':user,'followers':followers})
 
     def describe(request,id):
-
+        '''user description form'''
         if request.user==User.objects.get(pk=id):
 
             if request.method=="POST":

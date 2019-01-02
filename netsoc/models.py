@@ -22,7 +22,7 @@ class comment(models.Model):
         return self.comment_text
 
 class user_profile(models.Model):
-
+    '''User profile for every user'''
     user=models.ForeignKey(User,on_delete=models.CASCADE,primary_key=True,related_name="profile_user")
     following=models.ManyToManyField(User)
     followers=models.ManyToManyField(User,related_name="following_users")

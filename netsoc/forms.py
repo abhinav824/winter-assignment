@@ -4,6 +4,7 @@ from . import models
 from django.contrib.auth.forms import PasswordChangeForm
 
 class UserForm(forms.Form):
+    '''Registration form for a new user'''
     first_name=forms.CharField(label='First Name', min_length=2 , max_length = 20)
     last_name=forms.CharField(label='Last Name', min_length=2 , max_length =20)
     gender_choices=(('M','Male'),('F','Female'),('O','Other'))
@@ -26,6 +27,7 @@ class CommentForm(forms.ModelForm):
         fields=['comment_text']
 
 class ProfileForm(forms.Form):
+    '''Form to edit profile details of a user'''
     first_name=forms.CharField(label='First Name', min_length=2 , max_length = 20)
     last_name=forms.CharField(label='Last Name', min_length=2 , max_length =20)
     gender_choices=(('M','Male'),('F','Female'),('O','Other'))
