@@ -1,0 +1,38 @@
+{% load static %}
+<head>
+  <title>{{user.username}}</title>
+  <link rel="stylesheet" type="text/css" href="{% static 'netsoc/styles.css' %}">
+  {% if request.user.is_authenticated %}
+
+   <a href={% url 'netsoc:home' %}><button>News Feed</button></a>
+   <a href={% url 'netsoc:user_list' %}><button>User List</button><a/>
+   <a href={% url 'netsoc:logout' %}><button>Logout</button></a>
+
+
+  <br><h1>Profile {% if request.user == user %}<small><a href="{% url 'netsoc:edit_profile' request.user.id %}"><button>edit info</button></a></small><small><a href="{% url 'netsoc:change_password' request.user.id %}"><button>Change Password</button></a></small>{% endif %}</h1>
+  <body>
+      <br><p1><b>Name</b>      :  {{user.first_name}} {{user.last_name}}</p1>
+      <br><br><p2><b>Gender</b>    :  {{prof.gender}}</p2>
+      <br><br><p3><b>D.O.B</b>     :  {{prof.date_of_birth}}</p3>
+      <br><br><b><p4><a class="nameurl", href="{% url 'netsoc:following' user.id %}"> Following</a></b> :  {{ prof.following.count }}</p4>
+      <br><br><p5><a class="nameurl" href="{% url 'netsoc:followers' user.id %}"><b>Followers</b></a> :  {{ prof.followers.count }}</p5>
+      <br><br><p6><b>Description</b>  :  {{prof.description}} , {% if request.user == user %}<small><a class="nameurl" href="{% url 'netsoc:describe' request.user.id %}">edit</a></small>{% endif %}</p6>
+    </body>
+    {% if request.user != user %}
+    {% if request.user in prof.followers.all %}
+    <br><br><a href="{% url 'netsoc:unfollow' user.id %}"><button>Unfollow</button></a>
+    {% else %}
+    <br><br><a href="{% url 'netsoc:follow' user.id %}"><button>Follow</button></a>
+     {% endif %}
+    {% endif %}
+
+
+  {% else %}
+
+     <h2>You are not logged in !! </h2>
+     <br><h3>Login or register to see this page</h3>
+     <a href={% url 'netsoc:login' %}><button>Login</button></a>
+     <a href={% url 'netsoc:createuser' %}><button>Sign Up</button></a>
+
+  {% endif %}
+</head>

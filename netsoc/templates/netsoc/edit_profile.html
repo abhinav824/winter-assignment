@@ -1,0 +1,32 @@
+<head>
+  <title>Edit Profile</title>
+  {% if request.user.is_authenticated %}
+  <a href={% url 'netsoc:home' %}><button>Home</button><a/>
+  <a href={% url 'netsoc:profile' request.user.id %}><button>Profile</button><a/>
+  <a href={% url 'netsoc:logout' %}><button>Logout</button></a>
+
+
+  <br><h2>Edit Profile Data</h2>
+
+    <body>
+      <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <input type="submit" name="submit" value="update"/>
+
+      </form>
+
+    </body>
+
+  {% else %}
+
+    <p>To view this page you must login first</p>
+      <a href={% url 'netsoc:login' %}>
+        <button>Login</button></a>
+
+      <a href={% url 'netsoc:createuser' %}>
+        <button>Sign Up</button></a>
+
+    {% endif %}
+  </head>

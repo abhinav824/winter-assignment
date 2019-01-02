@@ -1,0 +1,13 @@
+.nameurl:link{
+       color:black;
+       text-decoration:none; 
+      }
+
+.nameurl:visited{
+           color:black;
+         }
+
+.nameurl:hover {
+          color:blue;
+         }
+

@@ -1,0 +1,50 @@
+<head>
+  <title>News feed</title>
+  <link rel="stylesheet" type="text/css" href="../../static/netsoc/styles.css">
+
+  {% if request.user.is_authenticated %}
+
+  <h1>News Feed</h1>
+  <a>Hello , {{ request.user.username }}</a>
+
+  <a href={% url 'netsoc:new_post' %}><button>Create a new post</button></a>
+  <a href={% url 'netsoc:profile' request.user.id %}><button>Profile</button><a/>
+  <a href={% url 'netsoc:user_list' %}><button>User List</button><a/>
+  <a href={% url 'netsoc:logout' %}><button>Logout</button></a>
+
+
+  <br><p1>==================================================================================================</p1>
+  <p2>{% for p in post %}
+    <br><a>____________________________________________________________________________________________________________________________________________________________</a>
+  <br><br><b><a class="nameurl" href="{% url 'netsoc:profile' p.post_user.id %}" >{{ p.post_user }}</a></b>
+    <br><br><small>{{ p.post_date }} ,{% if request.user == p.post_user %}<a href="{% url 'netsoc:delete_post' p.id %}"><img src="../../static/netsoc/images/delete.gif" style="width:19px;height:19px;", name="delete post"></a>
+      <a href="{% url 'netsoc:edit_post' p.id %}"><img src="../../static/netsoc/images/edit.gif" style="width:19px;height:19px;", name="edit post"></a>{% endif %}</small>
+
+          <br>{{ p.post_text }}<br>
+      <a>------------------------------------------------------------------------------</a>
+
+      <form action= "{% url 'netsoc:save_comment' p.id %}" , method="POST">
+         {% csrf_token %}
+         {{ form.as_p }}
+
+         <input type="submit" name="submit" value="Comment">
+
+       </form>
+
+      <a>{% for c in comments %}
+         {% if c.comment_post == p %}
+        <br><b><a class="nameurl" href="{% url 'netsoc:profile' p.post_user.id %}" >{{ c.comment_user }}</a></b> : {{ c.comment_text }} ,{% if request.user == c.comment_user %} <small><a href = "{% url 'netsoc:delete_comment' c.id %}">delete</a> </small> {% endif %}</a>
+         {% endif %}
+      {% endfor %}
+      {% endfor %}
+  </p2>
+  {% else %}
+  <p>To view news feed you must login first</p>
+    <a href={% url 'netsoc:login' %}>
+      <button>Login</button></a>
+
+    <a href={% url 'netsoc:createuser' %}>
+      <button>Sign Up</button></a>
+
+  {% endif %}
+</head>

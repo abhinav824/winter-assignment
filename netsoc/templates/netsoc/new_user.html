@@ -1,0 +1,22 @@
+
+<title>Register</title>
+{% if request.user.is_authenticated %}
+<h2>{{request.user.username}} is already Logged in </h2>
+<h3><a href={% url 'netsoc:home' %}> <button>Redirect to news feed</button></a>
+  <a href={% url 'netsoc:logout' %}>
+       <button>Logout</button></a>
+</h3>
+{% else %}
+<title><Register</title>
+<h2>Register</h2>
+<form method="POST">
+   {% csrf_token %}
+   {{ form.as_p }}
+
+   <input type="submit" name="submit" value="Register"/>
+
+ </form>
+
+ <a href={% url 'netsoc:login' %}>
+     <button>Login</button></a>
+{% endif %}

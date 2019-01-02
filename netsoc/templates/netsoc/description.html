@@ -1,0 +1,19 @@
+<head>
+  <title>Describe Yourself</title>
+
+  <a><b>Username :</b> {{request.user.username}} ,</a>
+  <a href={% url 'netsoc:home' %}><button>News Feed</button></a>
+  <a href={% url 'netsoc:profile' request.user.id %}><button>Profile</button><a/>
+  <a href={% url 'netsoc:logout' %}><button>Logout</button></a>
+
+  <br><h2>Description</h2>
+
+  <body>
+    <form method="POST">
+      {% csrf_token %}
+      {{ form.as_p }}
+   <input type="submit" name="submit" value="save"/>
+
+     </form>
+
+   </body>
