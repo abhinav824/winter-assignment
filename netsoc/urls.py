@@ -23,5 +23,6 @@ urlpatterns=[
             path('<int:id>/profile/following/',views.profile.following,name='following'),
             path('<int:id>/profile/edit_profile/',views.datahandle.edit_profile,name='edit_profile'),
             path('<int:id>/profile/change_password/',views.datahandle.changepassword,name='change_password'),
-            path('<int:id>/profile/description/',views.profile.describe,name='describe')
+            path('<int:id>/profile/description/',views.profile.describe,name='describe'),
+            path('<int:id>/profile/UploadImage/',views.profile.UploadImage,name='UploadImage'),
 ]

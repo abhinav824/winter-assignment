@@ -9,13 +9,13 @@
    <a href={% url 'netsoc:logout' %}><button>Logout</button></a>
 
 
-  <br><h1>Profile {% if request.user == user %}<small><a href="{% url 'netsoc:edit_profile' request.user.id %}"><button>edit info</button></a></small><small><a href="{% url 'netsoc:change_password' request.user.id %}"><button>Change Password</button></a></small>{% endif %}</h1>
+  <br><h1>Profile {% if request.user == user %}<small><a href="{% url 'netsoc:edit_profile' request.user.id %}"><button>edit info</button></a></small><small><a href="{% url 'netsoc:change_password' request.user.id %}"><button>Change Password</button></a></small><small><a href="{% url 'netsoc:UploadImage' request.user.id %}"><button>Upload Image</button></small></a>{% endif %}</h1>
   <body>
       <br><p1><b>Name</b>      :  {{user.first_name}} {{user.last_name}}</p1>
       <br><br><p2><b>Gender</b>    :  {{prof.gender}}</p2>
       <br><br><p3><b>D.O.B</b>     :  {{prof.date_of_birth}}</p3>
       <br><br><b><p4><a class="nameurl", href="{% url 'netsoc:following' user.id %}"> Following</a></b> :  {{ prof.following.count }}</p4>
-      <br><br><p5><a class="nameurl" href="{% url 'netsoc:followers' user.id %}"><b>Followers</b></a> :  {{ prof.followers.count }}</p5>
+      <br><br><p5><a class="nameurl" href="{% url 'netsoc:followers' user.id %}"><b>Followers</b></a> :  {{ followers.count }}</p5>
       <br><br><p6><b>Description</b>  :  {{prof.description}} , {% if request.user == user %}<small><a class="nameurl" href="{% url 'netsoc:describe' request.user.id %}">edit</a></small>{% endif %}</p6>
     </body>
     {% if request.user != user %}
@@ -25,6 +25,34 @@
     <br><br><a href="{% url 'netsoc:follow' user.id %}"><button>Follow</button></a>
      {% endif %}
     {% endif %}
+
+    <br><p1>==================================================================================================</p1>
+    <h2><u>Posts</u></h2>
+    <p2>{% for p in posts %}
+      <a>____________________________________________________________________________________________________________________________________________________________</a>
+    <br><br><b><a class="nameurl" href="{% url 'netsoc:profile' p.post_user.id %}" >{{ p.post_user }}</a></b>
+      <br><br><small>{{ p.post_date }} ,{% if request.user == p.post_user %}<a href="{% url 'netsoc:delete_post' p.id %}"><img src="{% static 'netsoc/images/delete.gif' %}" style="width:19px;height:19px;", name="delete post"></a>
+        <a href="{% url 'netsoc:edit_post' p.id %}"><img src="{% static 'netsoc/images/edit.gif' %}" style="width:19px;height:19px;", name="edit post"></a>{% endif %}</small>
+
+            <br>{{ p.post_text }}<br>
+        <a>------------------------------------------------------------------------------</a>
+
+        <form action= "{% url 'netsoc:save_comment' p.id %}" , method="POST">
+           {% csrf_token %}
+           {{ form.as_p }}
+
+           <input type="submit" name="submit" value="Comment">
+
+         </form>
+
+        <a>{% for c in p.comment_set.all %}
+
+          <br><b><a class="nameurl" href="{% url 'netsoc:profile' p.post_user.id %}" >{{ c.comment_user }}</a></b> : {{ c.comment_text }} ,{% if request.user == c.comment_user %} <small><a href = "{% url 'netsoc:delete_comment' c.id %}">delete</a> </small> {% endif %}</a>
+
+        {% endfor %}
+        {% endfor %}
+    </p2>
+
 
 
   {% else %}

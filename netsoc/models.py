@@ -3,9 +3,10 @@ from django.db import models
 from django.contrib.auth.models import User
 #inbuilt user model in django
 
+
 class post(models.Model):
 #model for posts
-    post_text=models.CharField(max_length=200)
+    post_text=models.TextField(max_length=200)
     post_date=models.DateTimeField('date_published')
     post_user=models.ForeignKey(User,on_delete=models.CASCADE)
 
@@ -23,12 +24,14 @@ class comment(models.Model):
 
 class user_profile(models.Model):
     '''User profile for every user'''
-    user=models.ForeignKey(User,on_delete=models.CASCADE,primary_key=True,related_name="profile_user")
-    following=models.ManyToManyField(User)
-    followers=models.ManyToManyField(User,related_name="following_users")
+    user=models.OneToOneField(User,on_delete=models.CASCADE,primary_key=True,related_name="profile_user")
+    following=models.ManyToManyField(User,related_name='follower_user')
+
     description=models.CharField(max_length=200)
     date_of_birth=models.DateField()
-    gender=models.CharField(max_length=1,default=None)
+    gen_choice=(('M',"Male"),('F',"Female"),('O',"Other"))
+    gender=models.CharField(max_length=1,choices=gen_choice,default=None)
+
 
     def __str__(self):
         return self.user.username

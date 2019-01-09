@@ -121,3 +121,7 @@ USE_TZ = True
 LOGIN_REDIRECT_URL = "http://127.0.0.1:8000/netsoc/home/"
 LOGOUT_REDIRECT_URL="http://127.0.0.1:8000/netsoc/login/"
 STATIC_URL = '/static/'
+#Media Files(Images)
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR,'/netsoc/media')

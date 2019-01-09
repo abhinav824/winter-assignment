@@ -32,7 +32,7 @@ class new_user(object):
                 UP.save()
 
 
-                return redirect('/netsoc/created')
+                return redirect('netsoc:registered')
         else:
             form=forms.UserForm()
             return render(request,'netsoc/new_user.html',{'form':form})
@@ -151,7 +151,7 @@ class datahandle(object):
         user_foll=User.objects.get(pk=id)
         user_foll_prof=models.user_profile.objects.get(user=user_foll)
         user_req.following.add(user_foll)
-        user_foll_prof.followers.add(request.user)
+
         return redirect('netsoc:profile',id)
 
     def unfollow(request,id):
@@ -159,7 +159,7 @@ class datahandle(object):
         user_req_prof=models.user_profile.objects.get(user=request.user)
         user_foll=User.objects.get(pk=id)
         user_foll_prof=models.user_profile.objects.get(user=user_foll)
-        user_foll_prof.followers.remove(request.user)
+
         user_req_prof.following.remove(user_foll)
         return redirect('netsoc:profile',id)
 
@@ -237,12 +237,18 @@ class profile(object):
         '''view to display the profile page of a user'''
         user=User.objects.get(pk=id)
         prof=models.user_profile.objects.get(user=user)
+        qu=user.follower_user.all()
+        followers =User.objects.filter(profile_user__in=qu)
 
-        return render(request,'netsoc/profile_page.html',{'user':user,'prof':prof})
+        posts=user.post_set.all()
+        comments=models.comment.objects.all()
+        form=forms.CommentForm()
+
+        return render(request,'netsoc/profile_page.html',{'user':user,'prof':prof,'posts':posts,'comments':comments,'form':form,'followers':followers})
 
     def following(request,id):
         '''To display the list of the users which are followed by the given user'''
-        user=request.user
+        user=User.objects.get(pk=id)
         user_prof=models.user_profile.objects.get(user=user)
         following=user_prof.following.all()
 
@@ -250,9 +256,11 @@ class profile(object):
 
     def followers(request,id):
         '''to display the list of users who are following the given user'''
-        user=request.user
+        user=User.objects.get(pk=id)
         user_prof=models.user_profile.objects.get(user=user)
-        followers=user_prof.followers.all()
+        qu=user.follower_user.all()
+        followers =User.objects.filter(profile_user__in=qu)
+
 
         return render(request,'netsoc/followers.html',{'user':user,'followers':followers})
 
@@ -279,3 +287,19 @@ class profile(object):
         else:
 
             return HttpResponseForbidden('Access Denied')
+
+    def UploadImage(request,id):
+
+        if request.user==User.objects.get(pk=id):
+
+            if request.method=='POST':
+                return redirect('netsoc:profile',id)
+
+            else:
+
+                form=forms.ImageForm()
+
+                return render(request,'netsoc/UploadImage.html',{'form':form})
+        else:
+
+            HttpResponseForbidden("Access Denied")

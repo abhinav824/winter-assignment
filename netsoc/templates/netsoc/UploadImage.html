@@ -1,0 +1,22 @@
+<head>
+  <title>Upload</title>
+
+  <a href={% url 'netsoc:home' %}><button>Home</button><a/>
+  <a href={% url 'netsoc:profile' request.user.id %}><button>Profile</button><a/>
+  <a href={% url 'netsoc:logout' %}><button>Logout</button></a>
+
+  <a><b>Name :</b> {{request.user.username}}</a>
+  <h3>Upload Your Profile Picture</h3>
+
+  <body>
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <input type="file" name="image">
+
+      <input type="submit" value="Make Profile Picture"/>
+
+    </form>
+
+  </body>
+
+</head>

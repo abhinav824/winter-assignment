@@ -39,3 +39,7 @@ class ProfileForm(forms.Form):
 class DescriptionForm(forms.Form):
 
     description=forms.CharField(label='Describe Yourself' , required=False , max_length =200)
+
+class ImageForm(forms.Form):
+
+    image=forms.ImageField()
