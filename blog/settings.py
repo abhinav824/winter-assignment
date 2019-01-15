@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'netsoc.apps.NetsocConfig',
+
 ]
 
 MIDDLEWARE = [
@@ -77,8 +78,13 @@ WSGI_APPLICATION = 'blog.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'blog',
+        'USER': 'root',
+        'PASSWORD': '2368522871Ch',
+        'HOST':'localhost',
+        'PORT':'',
+
     }
 }
 
@@ -118,10 +124,13 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
-LOGIN_REDIRECT_URL = "http://127.0.0.1:8000/netsoc/home/"
-LOGOUT_REDIRECT_URL="http://127.0.0.1:8000/netsoc/login/"
+LOGIN_REDIRECT_URL = "netsoc:home"
+LOGOUT_REDIRECT_URL="netsoc:login"
 STATIC_URL = '/static/'
 #Media Files(Images)
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR,'/netsoc/media')
+MEDIA_ROOT = os.path.join(BASE_DIR,'netsoc/media')
+
+EMAIL_BACKEND = "sgbackend.SendGridBackend"
+SENDGRID_API_KEY=keyconfig.SENDGRID_API_KEY

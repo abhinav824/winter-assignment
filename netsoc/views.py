@@ -8,6 +8,9 @@ from django.utils import timezone
 from django.http import HttpResponseForbidden
 from django.contrib import messages
 from .create_record import record_store
+from .resize import get_resized_image
+from PIL import Image
+from django.core.mail import EmailMultiAlternatives
 # Create your views here.
 
 class new_user(object):
@@ -67,6 +70,19 @@ class news_feed(object):
                 post.post_date=timezone.now()
                 post.post_user=request.user
                 post.save()
+
+                recipient_list=[]
+                for subscriber in post.post_user.profile_user.subscribers.all():
+                    if subscriber.email:
+                        recipient_list.append(subscriber.email)
+                mail=EmailMultiAlternatives(
+                subject="Post Update - NETSOC , {0} Posted Something".format(post.post_user.username),
+                body="check this out on NETSOC , \n {0}".format(post.post_text),
+                from_email="NETSOC <abhinavtiwari824@gmail.com>",
+                to=recipient_list
+                )
+                mail.send()
+
                 return redirect('netsoc:home')
         else:
             form=forms.PostForm()
@@ -163,6 +179,33 @@ class datahandle(object):
         user_req_prof.following.remove(user_foll)
         return redirect('netsoc:profile',id)
 
+    def subsreq(request,id):
+        if request.user.is_authenticated and request.user.id!=id:
+
+            user=User.objects.get(pk=id)
+            user_prof=models.user_profile.objects.get(user=user)
+            user_req=request.user
+            user_prof.subscribers.add(user_req)
+
+            return redirect('netsoc:profile',id)
+        else:
+
+            HttpResponseForbidden('Access Denied , invalid request')
+
+    def unsubsreq(request,id):
+        if request.user.is_authenticated and request.user.id!=id:
+
+            user=User.objects.get(pk=id)
+            user_prof=models.user_profile.objects.get(user=user)
+            user_req=request.user
+            user_prof.subscribers.remove(user_req)
+
+            return redirect('netsoc:profile',id)
+        else:
+
+            HttpResponseForbidden('Access Denied , invalid request')
+
+
     def edit_profile(request,id):
 
         if request.user == models.user_profile.objects.get(pk=id).user:
@@ -240,7 +283,7 @@ class profile(object):
         qu=user.follower_user.all()
         followers =User.objects.filter(profile_user__in=qu)
 
-        posts=user.post_set.all()
+        posts=user.post_set.all().order_by('-post_date')
         comments=models.comment.objects.all()
         form=forms.CommentForm()
 
@@ -293,13 +336,33 @@ class profile(object):
         if request.user==User.objects.get(pk=id):
 
             if request.method=='POST':
-                return redirect('netsoc:profile',id)
+                form=forms.ImageForm(request.POST,request.FILES)
+
+                if form.is_valid():
+                    user_prof=models.user_profile.objects.get(user=request.user)
+                    file=request.FILES['image']
+                    user_prof.picture=file
+                    user_prof.save()
+
+                    image=get_resized_image(user_prof.picture)
+                    image.save(user_prof.picture.path)
+                    return redirect('netsoc:profile',id)
+
+                else:
+
+                    messages.error(request,('Please correct the error'))
+                    return render(request,'netsoc/UploadImage.html',{'form':form})
 
             else:
 
                 form=forms.ImageForm()
-
+                messages.error(request,('Please correct the error'))
                 return render(request,'netsoc/UploadImage.html',{'form':form})
         else:
 
             HttpResponseForbidden("Access Denied")
+
+    def get_follower_set(user):
+        qu=user.follower_user.all()
+        followers =User.objects.filter(profile_user__in=qu)
+        return followers

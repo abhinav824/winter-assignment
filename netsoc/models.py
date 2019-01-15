@@ -24,13 +24,19 @@ class comment(models.Model):
 
 class user_profile(models.Model):
     '''User profile for every user'''
+
+    def user_directory_path(instance,filename):
+        return "user_{0}/{1}".format(instance.user.id,filename)
+
+
     user=models.OneToOneField(User,on_delete=models.CASCADE,primary_key=True,related_name="profile_user")
     following=models.ManyToManyField(User,related_name='follower_user')
-
-    description=models.CharField(max_length=200)
+    picture=models.ImageField(upload_to=user_directory_path,blank=True)
+    description=models.CharField(max_length=200,blank=True)
     date_of_birth=models.DateField()
     gen_choice=(('M',"Male"),('F',"Female"),('O',"Other"))
     gender=models.CharField(max_length=1,choices=gen_choice,default=None)
+    subscribers=models.ManyToManyField(User,related_name='subscribed')
 
 
     def __str__(self):

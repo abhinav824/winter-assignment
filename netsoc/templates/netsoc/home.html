@@ -33,7 +33,7 @@
 
       <a>{% for c in p.comment_set.all %}
 
-        <br><b><a class="nameurl" href="{% url 'netsoc:profile' p.post_user.id %}" >{{ c.comment_user }}</a></b> : {{ c.comment_text }} ,{% if request.user == c.comment_user %} <small><a href = "{% url 'netsoc:delete_comment' c.id %}">delete</a> </small> {% endif %}</a>
+        <br><b><a class="nameurl" href="{% url 'netsoc:profile' c.comment_user.id %}" >{{ c.comment_user }}</a></b> : {{ c.comment_text }} ,{% if request.user == c.comment_user %} <small><a href = "{% url 'netsoc:delete_comment' c.id %}">delete</a> </small> {% endif %}</a>
 
       {% endfor %}
       {% endfor %}

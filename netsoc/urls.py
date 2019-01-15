@@ -1,5 +1,6 @@
 from django.urls import path,include
-
+from django.conf.urls.static import static
+from django.conf import settings
 
 from . import views
 
@@ -18,6 +19,8 @@ urlpatterns=[
             path('<int:id>/profile/',views.profile.profile_page,name='profile'),
             path('<int:id>/follow/',views.datahandle.followreq,name='follow'),
             path('<int:id>/unfollow/',views.datahandle.unfollow,name='unfollow'),
+            path('<int:id>/subscribe/',views.datahandle.subsreq,name='subscribe'),
+            path('<int:id>/unsubscribe/',views.datahandle.unsubsreq,name='unsubscribe'),
             path('user_list/',views.news_feed.user_list,name='user_list'),
             path('<int:id>/profile/followers/',views.profile.followers,name='followers'),
             path('<int:id>/profile/following/',views.profile.following,name='following'),
@@ -25,4 +28,6 @@ urlpatterns=[
             path('<int:id>/profile/change_password/',views.datahandle.changepassword,name='change_password'),
             path('<int:id>/profile/description/',views.profile.describe,name='describe'),
             path('<int:id>/profile/UploadImage/',views.profile.UploadImage,name='UploadImage'),
+
+
 ]
