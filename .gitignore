@@ -117,3 +117,6 @@ dmypy.json
 #keyconfig file
 keyconfig.py
 sendgrid.env
+
+#dumpdata
+dumpdata.json
