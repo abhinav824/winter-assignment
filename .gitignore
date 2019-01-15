@@ -119,4 +119,4 @@ keyconfig.py
 sendgrid.env
 
 #dumpdata
-dumpdata.json
+/dumpdata.json
