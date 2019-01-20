@@ -1,0 +1,18 @@
+<head>
+  <title>Complete your profile</title>
+
+  <h1><center>WELCOME TO NETSOC</center></h1>
+  <h2>Complete your Profile</h2>
+  <a href={% url 'netsoc:logout' %}><button>Logout</button></a>
+
+  <body>
+    <p>Hello {{request.user.username}} ,
+  <form method="POST">
+    {% csrf_token %}
+    {{form.as_p}}
+
+    <input type=submit name='submit' value='Save'>
+
+  </form>
+</body>
+</head>

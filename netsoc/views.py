@@ -11,6 +11,8 @@ from .create_record import record_store
 from .resize import get_resized_image
 from PIL import Image
 from django.core.mail import EmailMultiAlternatives
+from . import user_record
+from django.http import HttpResponse
 # Create your views here.
 
 class new_user(object):
@@ -48,6 +50,11 @@ class news_feed(object):
 
     def home(request):
         '''View to display the home page'''
+        if request.user.is_authenticated:
+        #complete profile of a new user
+            if not models.user_profile.objects.filter(user=request.user).exists():
+                return redirect('netsoc:profile_completion')
+
         try:
             list=models.user_profile.objects.get(user=request.user).following.all()
             queryset=list | User.objects.filter(pk=request.user.pk)
@@ -91,7 +98,7 @@ class news_feed(object):
 
     def user_list(request):
         '''To display list of all users'''
-        list=User.objects.all()
+        list=User.objects.all().exclude(username='admin')
         prof_list=models.user_profile.objects.all()
 
         return render(request,'netsoc/user_list.html',{'list':list,'profiles':prof_list})
@@ -273,6 +280,39 @@ class datahandle(object):
 
             return HttpResponseForbidden('Access Denied')
 
+    def user_record(request):
+
+        if request.user.is_staff or request.user.is_superuser:
+            user_record.create()
+
+            return HttpResponse('Exported Succesfully')
+
+        else:
+
+            return HttpResponseForbidden('Only staff members and admins are allowed to access this page')
+
+    def profile_completion(request):
+
+        if request.user.is_authenticated:
+
+            if request.method=="POST":
+                form=forms.profile_completion_form(request.POST)
+
+                if form.is_valid():
+
+                    DOB=form.cleaned_data['DOB']
+                    gender=form.cleaned_data['gender']
+                    profile=models.user_profile(user=request.user,date_of_birth=DOB,gender=gender)
+                    profile.save()
+                    return redirect('netsoc:home')
+
+            else:
+
+                form=forms.profile_completion_form()
+                return render(request,'netsoc/profile_completion.html',{'form':form})
+        else:
+
+            return HttpResponseForbidden('Access Denied')
 
 class profile(object):
 

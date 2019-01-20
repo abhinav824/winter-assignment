@@ -120,3 +120,7 @@ sendgrid.env
 
 #dumpdata
 /dumpdata.json
+UserDATA.xlsx
+
+#media files
+media/

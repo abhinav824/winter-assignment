@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'netsoc.apps.NetsocConfig',
+    'social_django',
 
 ]
 
@@ -50,6 +51,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'social_django.middleware.SocialAuthExceptionMiddleware',
 ]
 
 ROOT_URLCONF = 'blog.urls'
@@ -65,10 +67,19 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
 ]
+
+AUTHENTICATION_BACKENDS=(
+'social_core.backends.open_id.OpenIdAuth',
+'social_core.backends.google.GoogleOpenId',
+'social_core.backends.google.GoogleOAuth2',
+'django.contrib.auth.backends.ModelBackend',
+)
 
 WSGI_APPLICATION = 'blog.wsgi.application'
 
@@ -81,7 +92,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'blog',
         'USER': 'root',
-        'PASSWORD': '2368522871Ch',
+        'PASSWORD': keyconfig.MYSQLPASSWORD,
         'HOST':'localhost',
         'PORT':'',
 
@@ -124,6 +135,7 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
+LOGIN_URL='login'
 LOGIN_REDIRECT_URL = "netsoc:home"
 LOGOUT_REDIRECT_URL="netsoc:login"
 STATIC_URL = '/static/'
@@ -134,3 +146,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR,'netsoc/media')
 
 EMAIL_BACKEND = "sgbackend.SendGridBackend"
 SENDGRID_API_KEY=keyconfig.SENDGRID_API_KEY
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY =keyconfig.GOOGLE_CLIENT_ID
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = keyconfig.GOOGLE_CLIENT_SECRET
+
+SOCIAL_AUTH_URL_NAMESPACE = "netsoc:social"

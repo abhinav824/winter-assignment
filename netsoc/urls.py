@@ -28,6 +28,8 @@ urlpatterns=[
             path('<int:id>/profile/change_password/',views.datahandle.changepassword,name='change_password'),
             path('<int:id>/profile/description/',views.profile.describe,name='describe'),
             path('<int:id>/profile/UploadImage/',views.profile.UploadImage,name='UploadImage'),
-
+            path('user_record/',views.datahandle.user_record,name='user_record'),
+            path('auth',include('social_django.urls', namespace='social')),
+            path('profile_completion/',views.datahandle.profile_completion,name='profile_completion'),
 
 ]

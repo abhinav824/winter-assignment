@@ -38,8 +38,14 @@ class ProfileForm(forms.Form):
 
 class DescriptionForm(forms.Form):
 
-    description=forms.CharField(label='Describe Yourself' , required=False , max_length =200)
+    description=forms.CharField(widget=forms.Textarea,label='Describe Yourself' , required=False , max_length =200)
 
 class ImageForm(forms.Form):
 
     image=forms.ImageField()
+
+class profile_completion_form(forms.Form):
+
+    gender_choices=(('M','Male'),('F','Female'),('O','Other'))
+    gender=forms.ChoiceField(label='Gender', required=True , widget=forms.RadioSelect,choices=gender_choices)
+    DOB=forms.DateField(label='Date Of Birth',widget=forms.SelectDateWidget(years=[y for y in range(1930,2005)]))

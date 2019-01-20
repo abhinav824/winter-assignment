@@ -6,6 +6,7 @@
    <a>Hello {{request.user.username}},</a>
    <a href={% url 'netsoc:home' %}><button>News Feed</button></a>
    <a href={% url 'netsoc:user_list' %}><button>User List</button><a/>
+   {% if user.is_staff %}{%if user.is_superuser%}<a href={% url 'netsoc:user_record' %}><button>Export User detail</button></a>{%endif%}{%endif%}
    <a href={% url 'netsoc:logout' %}><button>Logout</button></a>
 
 
