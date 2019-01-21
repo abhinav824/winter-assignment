@@ -5,7 +5,7 @@ from . import forms
 from django.urls import reverse
 from . import models
 from django.utils import timezone
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseForbidden,HttpResponse
 from django.contrib import messages
 from .create_record import record_store
 from .resize import get_resized_image
@@ -50,10 +50,6 @@ class news_feed(object):
 
     def home(request):
         '''View to display the home page'''
-        if request.user.is_authenticated:
-        #complete profile of a new user
-            if not models.user_profile.objects.filter(user=request.user).exists():
-                return redirect('netsoc:profile_completion')
 
         try:
             list=models.user_profile.objects.get(user=request.user).following.all()
@@ -64,10 +60,10 @@ class news_feed(object):
 
         except:
             return render(request,'netsoc/home.html',{})
-
         return render(request,'netsoc/home.html',{'post':posts,'comments':comments,'form':form})
 
     def new_post(request):
+
         '''view to display form for new post'''
         if request.method=='POST':
             form=forms.PostForm(request.POST)
@@ -283,10 +279,11 @@ class datahandle(object):
     def user_record(request):
 
         if request.user.is_staff or request.user.is_superuser:
-            user_record.create()
+            data=user_record.create()
 
-            return HttpResponse('Exported Succesfully')
-
+            response= HttpResponse(data, content_type='application/vnd.ms-excel')
+            response['Content-Disposition'] = 'attachment; filename="UserData.xlsx"'
+            return response
         else:
 
             return HttpResponseForbidden('Only staff members and admins are allowed to access this page')
@@ -318,8 +315,14 @@ class profile(object):
 
     def profile_page(request,id):
         '''view to display the profile page of a user'''
-        user=User.objects.get(pk=id)
-        prof=models.user_profile.objects.get(user=user)
+        try:
+            user=User.objects.get(pk=id)
+            prof=models.user_profile.objects.get(user=user)
+
+        except:
+
+            return redirect('netsoc:profile_completion')
+
         qu=user.follower_user.all()
         followers =User.objects.filter(profile_user__in=qu)
 
