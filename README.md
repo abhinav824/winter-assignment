@@ -1,6 +1,6 @@
 # WINTER ASSIGNMENT
 
-This Project is a social-media sort of app created using django web-framework where people can maintain their profiles 
+This Project is a social-media sort of web-app created using django web-framework where people can maintain their profiles 
 and follow/unfollow others, create posts, comment ,etc.Users can subscribe to each other for email notifications of new
 posts. Site Admins can also generate an excel sheet containing profile data of all the users.
 
